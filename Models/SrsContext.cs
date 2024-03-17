@@ -7,13 +7,10 @@ namespace SRSWebApi.Models;
 
 public partial class SrsContext : DbContext
 {
-    public SrsContext(
-	IConfiguration configuration)
+    public SrsContext()
     {
-		Configuration = configuration;
 	}
 
-	public IConfiguration Configuration { get; }
 	public SrsContext(DbContextOptions<SrsContext> options)
         : base(options)
     {
@@ -41,7 +38,7 @@ public partial class SrsContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+        => optionsBuilder.UseSqlite("Data Source=SRS.db");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
