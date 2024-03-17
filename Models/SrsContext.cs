@@ -1,21 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace SRSWebApi.Models;
 
 public partial class SrsContext : DbContext
 {
-    public SrsContext()
+    public SrsContext(
+	IConfiguration configuration)
     {
-    }
+		Configuration = configuration;
+	}
 
-    public SrsContext(DbContextOptions<SrsContext> options)
+	public IConfiguration Configuration { get; }
+	public SrsContext(DbContextOptions<SrsContext> options)
         : base(options)
     {
     }
 
-    public virtual DbSet<Course> Courses { get; set; }
+	
+	public virtual DbSet<Course> Courses { get; set; }
 
     public virtual DbSet<CourseDetail> CourseDetails { get; set; }
 
@@ -36,7 +41,7 @@ public partial class SrsContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlite("Data Source=SRS.db");
+        => optionsBuilder.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
