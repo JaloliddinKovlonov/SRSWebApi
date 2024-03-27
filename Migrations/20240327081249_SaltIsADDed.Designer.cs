@@ -2,17 +2,21 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SRSWebApi.Data;
+
 
 #nullable disable
 
 namespace SRSWebApi.Migrations
 {
     [DbContext(typeof(SrsContext))]
-    partial class SrsContextModelSnapshot : ModelSnapshot
+    [Migration("20240327081249_SaltIsADDed")]
+    partial class SaltIsADDed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
@@ -211,42 +215,6 @@ namespace SRSWebApi.Migrations
                     b.ToTable("Professors", "Users");
                 });
 
-            modelBuilder.Entity("SRSWebApi.Models.RefreshToken", b =>
-                {
-                    b.Property<int>("TokenId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("Expires")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsRevoked")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("IsUsed")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("LastLoggedInIP")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Token")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("TokenId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("RefreshTokens");
-                });
-
             modelBuilder.Entity("SRSWebApi.Models.Role", b =>
                 {
                     b.Property<int>("RoleId")
@@ -358,6 +326,10 @@ namespace SRSWebApi.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Salt")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(15)
@@ -388,17 +360,6 @@ namespace SRSWebApi.Migrations
                         .HasForeignKey("UserId")
                         .IsRequired()
                         .HasConstraintName("FK_Professors_Users");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("SRSWebApi.Models.RefreshToken", b =>
-                {
-                    b.HasOne("SRSWebApi.Models.User", "User")
-                        .WithMany("RefreshTokens")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -438,8 +399,6 @@ namespace SRSWebApi.Migrations
             modelBuilder.Entity("SRSWebApi.Models.User", b =>
                 {
                     b.Navigation("Professors");
-
-                    b.Navigation("RefreshTokens");
 
                     b.Navigation("Students");
                 });

@@ -34,4 +34,5 @@ public partial class User
     public virtual Role Role { get; set; } = null!;
 
     public virtual ICollection<Student> Students { get; } = new List<Student>();
+	public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 }
