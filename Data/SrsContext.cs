@@ -2,22 +2,23 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using SRSWebApi.Models;
 
-namespace SRSWebApi.Models;
+namespace SRSWebApi.Data;
 
 public partial class SrsContext : DbContext
 {
     public SrsContext()
     {
-	}
+    }
 
-	public SrsContext(DbContextOptions<SrsContext> options)
+    public SrsContext(DbContextOptions<SrsContext> options)
         : base(options)
     {
     }
 
-	
-	public virtual DbSet<Course> Courses { get; set; }
+
+    public virtual DbSet<Course> Courses { get; set; }
 
     public virtual DbSet<CourseDetail> CourseDetails { get; set; }
 
@@ -36,8 +37,9 @@ public partial class SrsContext : DbContext
     public virtual DbSet<Student> Students { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
+	public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlite("Data Source=SRS.db");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -149,7 +151,13 @@ public partial class SrsContext : DbContext
                 .HasConstraintName("FK_Users_Roles");
         });
 
-        OnModelCreatingPartial(modelBuilder);
+		modelBuilder.Entity<RefreshToken>(entity =>
+		{ entity.HasKey(e => e.TokenId); }
+);
+
+
+
+		OnModelCreatingPartial(modelBuilder);
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

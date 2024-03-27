@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SRSWebApi.DTO;
 using SRSWebApi.Interfaces;
 using SRSWebApi.Models;
 using SRSWebApi.Repository;
+using System.Security.Claims;
 
 namespace SRSWebApi.Controllers
 {
@@ -16,29 +18,54 @@ namespace SRSWebApi.Controllers
             _userRepository = userRepository;
         }
 
-        [HttpPost]
+		[HttpPost("SignUp")]
         [ProducesResponseType(200)]
-        public IActionResult CreateUser([FromBody] UserSignUpDTO user)
+        public IActionResult SignUp([FromBody] UserSignUpDTO user)
         {
-            var result = _userRepository.SignUp(user);
-            return Ok(result);
+            if (_userRepository.UserExistsByName(user.FirstName, user.LastName))
+            {
+				return BadRequest("User with the same username already exists");
+			}
+
+			var identity = HttpContext.User.Identity as ClaimsIdentity;
+			var userIdClaim = identity?.FindFirst(ClaimTypes.NameIdentifier);
+
+
+			var result = _userRepository.SignUp(user);
+			if (user == null) return BadRequest("Registration failed.");
+			return Ok(result);
         }
 
 
-        [HttpPost]
-        [Route("SignIn")]
+        [HttpPost("SignIn")]
         [ProducesResponseType(200)]
         public IActionResult SignIn(string username, string password)
         {
-            if (!_userRepository.SignIn(username, password))
-            {
-                return Unauthorized();
-            }
+            var user = _userRepository.SignIn(username, password);
 
-            return Ok("It is true");
-        }
+			if(user == null)
+				return Unauthorized("Invalid credentials or user is inactive.");
+
+			var refreshToken = _userRepository.GenerateOrUpdateRefreshToken(user.UserId, HttpContext.Request);
+			var jwtToken = _userRepository.CreateToken(user);
+
+			return Ok(new { jwt = jwtToken, refreshToken = refreshToken.Token });
+		}
 
 
+		[HttpPost("refresh-token")]
+		public ActionResult<object> RefreshToken(RefreshTokenDTO request)
+		{
+			var result = _userRepository.RefreshToken(request.Token, HttpContext.Request);
 
-    }
+			if (result == null)
+			{
+				return BadRequest("Invalid refresh token.");
+			}
+
+			return Ok(result);
+		}
+
+
+	}
 }
