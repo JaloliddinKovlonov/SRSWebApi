@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using SRSWebApi.Data;
 using SRSWebApi.Interfaces;
 using SRSWebApi.Models;
 using System.Diagnostics.CodeAnalysis;
 
 namespace SRSWebApi.Repository
 {
-	public class StudentRepository : IStudentRepository
+    public class StudentRepository : IStudentRepository
 
 	{
 		private readonly SrsContext _context;

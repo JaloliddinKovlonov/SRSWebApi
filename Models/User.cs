@@ -10,7 +10,6 @@ public partial class User
     public string UserName { get; set; } = null!;
 
     public string Password { get; set; } = null!;
-    public string Salt { get; set; } = null!;
 
     public string? Email { get; set; }
 
@@ -35,4 +34,5 @@ public partial class User
     public virtual Role Role { get; set; } = null!;
 
     public virtual ICollection<Student> Students { get; } = new List<Student>();
+	public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 }
