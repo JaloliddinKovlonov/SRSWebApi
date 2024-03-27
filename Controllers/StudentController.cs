@@ -29,7 +29,17 @@ namespace SRSWebApi.Controllers
             return Ok(result);
         }
 
+        [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        public IActionResult GetStudentById(int id)
+        {
+            var student = _studentRepository.GetStudentById(id);
+            if (student == null) return NotFound();
+            return Ok(student);
+        }
+
         [HttpDelete("{id}")]
+        [ProducesResponseType(200)]
         public IActionResult Delete(int id)
         {
             var result = _studentRepository.DeleteStudent(id);

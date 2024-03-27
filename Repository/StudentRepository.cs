@@ -41,7 +41,8 @@ namespace SRSWebApi.Repository
 
         public Student GetStudentById(int id)
         {
-            return _context.Students.Where(p=> p.StudentId == id).FirstOrDefault();
+            var student = _context.Students.Where(p=> p.StudentId == id).FirstOrDefault();
+            return (student);
         }
 
         public ICollection<Student> GetStudents()
