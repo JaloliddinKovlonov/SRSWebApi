@@ -40,7 +40,7 @@ public partial class SrsContext : DbContext
 	public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
 
 	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlite("Data Source=SRS.db");
+        => optionsBuilder.UseSqlite("Data Source=SRS.db", x => x.MigrationsAssembly("SRS.Migration"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

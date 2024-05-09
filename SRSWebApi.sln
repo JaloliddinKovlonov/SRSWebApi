@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SRSWebApi", "SRSWebApi.csproj", "{842C5171-AF31-435D-BB14-6FE5210DE6CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SRSWebApi", "SRSWebApi.csproj", "{842C5171-AF31-435D-BB14-6FE5210DE6CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SRS.Migration", "..\SRS.Migration\SRS.Migration.csproj", "{30788A90-9717-4830-9973-2E73745F430B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{842C5171-AF31-435D-BB14-6FE5210DE6CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{842C5171-AF31-435D-BB14-6FE5210DE6CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{842C5171-AF31-435D-BB14-6FE5210DE6CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30788A90-9717-4830-9973-2E73745F430B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30788A90-9717-4830-9973-2E73745F430B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30788A90-9717-4830-9973-2E73745F430B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30788A90-9717-4830-9973-2E73745F430B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
