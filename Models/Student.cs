@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace SRSWebApi.Models;
 
+[Index("UserId", Name = "IX_Students_UserId")]
 public partial class Student
 {
+    [Key]
     public int StudentId { get; set; }
 
     public string FirstName { get; set; } = null!;
@@ -29,5 +34,10 @@ public partial class Student
 
     public int UserId { get; set; }
 
+    [InverseProperty("Student")]
+    public virtual ICollection<StudentCourse> StudentCourses { get; set; } = new List<StudentCourse>();
+
+    [ForeignKey("UserId")]
+    [InverseProperty("Students")]
     public virtual User User { get; set; } = null!;
 }
