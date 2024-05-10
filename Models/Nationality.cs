@@ -1,17 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace SRSWebApi.Models;
 
+[Keyless]
 public partial class Nationality
 {
     public int NationalityId { get; set; }
 
     public string NationalityName { get; set; } = null!;
 
-    public bool IsActive { get; set; }
+    public int IsActive { get; set; }
 
-    public bool IsDeleted { get; set; }
+    public int IsDeleted { get; set; }
 
-    public DateTime? DeletedOn { get; set; }
+    public string? DeletedOn { get; set; }
 }

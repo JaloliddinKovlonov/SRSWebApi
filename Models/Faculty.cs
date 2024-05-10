@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace SRSWebApi.Models;
 
 public partial class Faculty
 {
+    [Key]
     public int FacultyId { get; set; }
 
     public string FacultyName { get; set; } = null!;
@@ -13,5 +17,6 @@ public partial class Faculty
 
     public string? Description { get; set; }
 
-    public virtual ICollection<Department> Departments { get; } = new List<Department>();
+    [InverseProperty("Faculty")]
+    public virtual ICollection<Department> Departments { get; set; } = new List<Department>();
 }

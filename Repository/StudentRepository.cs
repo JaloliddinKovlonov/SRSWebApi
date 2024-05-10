@@ -1,10 +1,6 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using SRSWebApi.Data;
+﻿using SRSWebApi.Data;
 using SRSWebApi.Interfaces;
 using SRSWebApi.Models;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SRSWebApi.Repository
 {
@@ -22,8 +18,6 @@ namespace SRSWebApi.Repository
         {
             _context.Students.Add(student);
             return Save();
-
-
         }
 
         public bool DeleteStudent(int id)

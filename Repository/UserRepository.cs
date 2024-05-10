@@ -40,8 +40,8 @@ namespace SRSWebApi.Repository
             newUser.LastLogin = DateTime.Now;
             newUser.CreatedOn = DateTime.Now;
             newUser.ModifiedOn = DateTime.Now;
-            newUser.IsDeleted = false;
-            newUser.IsActive = true;
+            newUser.IsDeleted = 0;
+            newUser.IsActive = 1;
 
             _context.Add(newUser);
 
@@ -61,7 +61,7 @@ namespace SRSWebApi.Repository
         {
             var user = GetUserByUsername(username);
 
-			if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password) || !user.IsActive)
+			if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password) || (user.IsActive == 0))
 				return null;
 
 			if (user == null) return null;
@@ -122,16 +122,16 @@ namespace SRSWebApi.Repository
 			var ipAddress = GetIpAddress(request);
 
 			var existingToken = _context.RefreshTokens
-								.FirstOrDefault(t => t.UserId == userId && !t.IsRevoked);
+								.FirstOrDefault(t => t.UserId == userId && (t.IsRevoked == 0));
 
 			if (existingToken != null)
 			{
 				existingToken.Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
 				existingToken.Expires = DateTime.UtcNow.AddDays(int.Parse(_configuration.GetSection("JWT:RefreshTokenValidityInDays").Value));
 				existingToken.Created = DateTime.UtcNow;
-				existingToken.IsRevoked = false;
-				existingToken.IsUsed = false;
-				existingToken.LastLoggedInIP = ipAddress;
+				existingToken.IsRevoked = 0;
+				existingToken.IsUsed = 0;
+				existingToken.LastLoggedInIp = ipAddress;
 
 				_context.RefreshTokens.Update(existingToken);
 			}
@@ -143,9 +143,9 @@ namespace SRSWebApi.Repository
 					Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
 					Expires = DateTime.UtcNow.AddDays(int.Parse(_configuration.GetSection("JWT:RefreshTokenValidityInDays").Value)),
 					Created = DateTime.UtcNow,
-					IsRevoked = false,
-					IsUsed = false,
-					LastLoggedInIP = ipAddress
+					IsRevoked = 0,
+					IsUsed = 0,
+					LastLoggedInIp = ipAddress
 				};
 
 				_context.RefreshTokens.Add(newRefreshToken);
@@ -159,13 +159,13 @@ namespace SRSWebApi.Repository
 		{
 			var user = _context.Users.Include(u => u.RefreshTokens).Include(u => u.Role).SingleOrDefault(u => u.RefreshTokens.Any(t => t.Token == token));
 
-			if (user == null || !user.RefreshTokens.Any(t => t.Token == token && !t.IsUsed && !t.IsRevoked))
+			if (user == null || !user.RefreshTokens.Any(t => t.Token == token && (t.IsUsed == 1) && (t.IsRevoked == 1)))
 			{
 				return null;
 			}
 
 			var oldToken = user.RefreshTokens.Single(t => t.Token == token);
-			oldToken.IsUsed = true;
+			oldToken.IsUsed = 1;
 			_context.RefreshTokens.Update(oldToken);
 
 			var updatedRefreshToken = GenerateOrUpdateRefreshToken(user.UserId, request);

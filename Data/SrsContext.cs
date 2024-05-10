@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using SRSWebApi.Models;
 
 namespace SRSWebApi.Data;
@@ -17,6 +16,7 @@ public partial class SrsContext : DbContext
     {
     }
 
+    public virtual DbSet<Advisor> Advisors { get; set; }
 
     public virtual DbSet<Course> Courses { get; set; }
 
@@ -32,132 +32,76 @@ public partial class SrsContext : DbContext
 
     public virtual DbSet<Professor> Professors { get; set; }
 
+    public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
+
     public virtual DbSet<Role> Roles { get; set; }
+
+    public virtual DbSet<Semester> Semesters { get; set; }
 
     public virtual DbSet<Student> Students { get; set; }
 
-    public virtual DbSet<User> Users { get; set; }
-	public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
+    public virtual DbSet<StudentCourse> StudentCourses { get; set; }
 
-	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    public virtual DbSet<StudentGrade> StudentGrades { get; set; }
+
+    public virtual DbSet<User> Users { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlite("Data Source=SRS.db");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Course>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("Courses", "Academic");
-        });
-
-        modelBuilder.Entity<CourseDetail>(entity =>
-        {
-            entity.HasKey(e => e.CourseDetailsId);
-
-            entity.ToTable("CourseDetails", "Academic");
-
-            entity.Property(e => e.CourseCode).HasMaxLength(10);
-            entity.Property(e => e.CourseDescription).HasMaxLength(500);
-            entity.Property(e => e.CourseName).HasMaxLength(100);
+            entity.Property(e => e.CourseId).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<Department>(entity =>
         {
-            entity.ToTable("Departments", "Academic");
-
             entity.Property(e => e.DepartmentId).ValueGeneratedNever();
-            entity.Property(e => e.DepartmentCode).HasMaxLength(10);
-            entity.Property(e => e.DepartmentName).HasMaxLength(20);
-            entity.Property(e => e.Description).HasMaxLength(100);
 
-            entity.HasOne(d => d.Faculty).WithMany(p => p.Departments)
-                .HasForeignKey(d => d.FacultyId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Departments_Faculties");
-        });
-
-        modelBuilder.Entity<Faculty>(entity =>
-        {
-            entity.ToTable("Faculties", "Academic");
-
-            entity.Property(e => e.Description).HasMaxLength(100);
-            entity.Property(e => e.FacultyCode).HasMaxLength(10);
-            entity.Property(e => e.FacultyName).HasMaxLength(20);
-        });
-
-        modelBuilder.Entity<Gender>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToTable("Genders", "Core");
-
-            entity.Property(e => e.GenderName).HasMaxLength(10);
-        });
-
-        modelBuilder.Entity<Nationality>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToTable("Nationalities", "Core");
-
-            entity.Property(e => e.NationalityName).HasMaxLength(50);
+            entity.HasOne(d => d.Faculty).WithMany(p => p.Departments).OnDelete(DeleteBehavior.ClientSetNull);
         });
 
         modelBuilder.Entity<Professor>(entity =>
         {
-            entity.ToTable("Professors", "Users");
-
-            entity.Property(e => e.FirstName).HasMaxLength(20);
-            entity.Property(e => e.LastName).HasMaxLength(20);
-
-            entity.HasOne(d => d.User).WithMany(p => p.Professors)
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Professors_Users");
+            entity.HasOne(d => d.User).WithMany(p => p.Professors).OnDelete(DeleteBehavior.ClientSetNull);
         });
 
-        modelBuilder.Entity<Role>(entity =>
+        modelBuilder.Entity<Semester>(entity =>
         {
-            entity.ToTable("Roles", "Auth");
-
-            entity.Property(e => e.RoleName).HasMaxLength(20);
+            entity.Property(e => e.SemesterId).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<Student>(entity =>
         {
-            entity.ToTable("Students", "Users");
+            entity.HasOne(d => d.User).WithMany(p => p.Students).OnDelete(DeleteBehavior.ClientSetNull);
+        });
 
-            entity.Property(e => e.FirstName).HasMaxLength(20);
-            entity.Property(e => e.LastName).HasMaxLength(20);
+        modelBuilder.Entity<StudentCourse>(entity =>
+        {
+            entity.Property(e => e.StudentCourseId).ValueGeneratedNever();
+            entity.Property(e => e.IsCompleted).HasDefaultValue(0);
 
-            entity.HasOne(d => d.User).WithMany(p => p.Students)
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Students_Users");
+            entity.HasOne(d => d.Course).WithMany(p => p.StudentCourses).OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.Student).WithMany(p => p.StudentCourses).OnDelete(DeleteBehavior.ClientSetNull);
+        });
+
+        modelBuilder.Entity<StudentGrade>(entity =>
+        {
+            entity.Property(e => e.GradeId).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.ToTable("Users", "Auth");
+            entity.Property(e => e.Salt).HasDefaultValue("");
 
-            entity.Property(e => e.Email).HasMaxLength(20);
-            entity.Property(e => e.Password).HasMaxLength(20);
-            entity.Property(e => e.UserName).HasMaxLength(15);
-
-            entity.HasOne(d => d.Role).WithMany(p => p.Users)
-                .HasForeignKey(d => d.RoleId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Users_Roles");
+            entity.HasOne(d => d.Role).WithMany(p => p.Users).OnDelete(DeleteBehavior.ClientSetNull);
         });
 
-		modelBuilder.Entity<RefreshToken>(entity =>
-		{ entity.HasKey(e => e.TokenId); }
-);
-
-
-
-		OnModelCreatingPartial(modelBuilder);
+        OnModelCreatingPartial(modelBuilder);
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
