@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace SRSWebApi.Models;
 
 public partial class CourseDetail
-{
+{ 
     [Key]
     public int CourseDetailsId { get; set; }
 
