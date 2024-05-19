@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace SRSWebApi.Models;
+namespace SRSWebApi.TestModels;
 
 [Index("FacultyId", Name = "IX_Departments_FacultyId")]
 public partial class Department

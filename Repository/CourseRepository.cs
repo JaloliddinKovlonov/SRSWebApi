@@ -1,4 +1,6 @@
-﻿using SRSWebApi.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using SRSWebApi.Data;
+using SRSWebApi.DTO;
 using SRSWebApi.Interfaces;
 using SRSWebApi.Models;
 
@@ -12,9 +14,23 @@ namespace SRSWebApi.Repository
         {
             _context = context;
         }
-        public bool CreateCourse(Course course)
+        public bool CreateCourse(CourseDTO course)
 		{
-			_context.Courses.Add(course);
+			Course courseToCreate = new Course
+			{
+				CourseCode = course.CourseCode,
+				CourseName = course.CourseName,
+				CourseDescription = course.CourseDescription,
+				AcademicYear = course.AcademicYear,
+				SemesterId = course.SemesterId,
+				ProfessorId = course.ProfessorId,
+				CreditHours = course.CreditHours,
+				DepartmentId = course.DepartmentId,
+				PrerequisiteCourseId = course.PrerequisiteCourseId,
+				CreatedOn = DateTime.Now.ToString(),
+			};
+
+			_context.Courses.Add(courseToCreate);
 			return Save();
 		}
 
@@ -32,7 +48,10 @@ namespace SRSWebApi.Repository
 
 		public ICollection<Course> GetCourses()
 		{
-			return _context.Courses.ToList();
+			return _context.Courses.
+				Include(s => s.Semester).
+				Include(c => c.Professor).
+				ToList();
 		}
 
 		public bool Save()

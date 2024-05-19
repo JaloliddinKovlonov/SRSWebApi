@@ -1,4 +1,5 @@
-﻿using SRSWebApi.Models;
+﻿using SRSWebApi.DTO;
+using SRSWebApi.Models;
 
 namespace SRSWebApi.Interfaces
 {
@@ -6,7 +7,7 @@ namespace SRSWebApi.Interfaces
 	{
 		ICollection<Course> GetCourses();
 		Course GetCourseById(int id);
-		bool CreateCourse(Course course);
+		bool CreateCourse(CourseDTO course);
 		bool DeleteCourse(int id);
 	}
 }

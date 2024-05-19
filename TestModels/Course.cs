@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace SRSWebApi.Models;
+namespace SRSWebApi.TestModels;
 
 [Index("CourseId", IsUnique = true)]
 public partial class Course

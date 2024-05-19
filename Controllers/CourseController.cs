@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SRSWebApi.DTO;
 using SRSWebApi.Interfaces;
 using SRSWebApi.Models;
 using SRSWebApi.Repository;
@@ -25,8 +26,10 @@ namespace SRSWebApi.Controllers
 
 		[HttpPost]
 		[ProducesResponseType(200)]
-		public IActionResult CreateCourse([FromBody] Course course)
+		public IActionResult CreateCourse([FromBody] CourseDTO course)
 		{
+			
+
 			var result = _courseRepository.CreateCourse(course);
 			return Ok(result);
 		}

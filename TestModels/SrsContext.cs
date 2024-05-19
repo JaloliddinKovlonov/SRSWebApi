@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using SRSWebApi.Models;
 
-namespace SRSWebApi.Data;
+namespace SRSWebApi.TestModels;
 
 public partial class SrsContext : DbContext
 {
