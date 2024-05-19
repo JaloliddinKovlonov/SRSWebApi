@@ -12,5 +12,6 @@ namespace SRSWebApi.Interfaces
 		bool DeleteSchedule(int id);
 		bool Save();
 		ICollection<ScheduleGetDTO?> GetScheduleByStudentId(int studentId);
+		ICollection<ScheduleGetDTO?> GetScheduleByProfessorId(int professorId);
 	}
 }

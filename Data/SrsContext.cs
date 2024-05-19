@@ -54,8 +54,6 @@ public partial class SrsContext : DbContext
     {
         modelBuilder.Entity<Course>(entity =>
         {
-            entity.Property(e => e.CourseId).ValueGeneratedNever();
-
             entity.HasOne(d => d.Department).WithMany(p => p.Courses).OnDelete(DeleteBehavior.ClientSetNull);
         });
 
@@ -81,7 +79,6 @@ public partial class SrsContext : DbContext
 
         modelBuilder.Entity<StudentCourse>(entity =>
         {
-            entity.Property(e => e.StudentCourseId).ValueGeneratedNever();
             entity.Property(e => e.IsCompleted).HasDefaultValue(0);
 
             entity.HasOne(d => d.Course).WithMany(p => p.StudentCourses).OnDelete(DeleteBehavior.ClientSetNull);

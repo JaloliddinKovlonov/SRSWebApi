@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SRSWebApi.DTO;
 using SRSWebApi.Interfaces;
-using SRSWebApi.Models;
 using System.Collections.Generic;
 
 namespace SRSWebApi.Controllers
@@ -51,6 +50,15 @@ namespace SRSWebApi.Controllers
 			return Ok(schedule);
 		}
 
+		[HttpGet("ProfessorId/{professorId}")]
+		[ProducesResponseType(200)]
+		public IActionResult GetScheduleByProfessorId(int professorId)
+		{
+			var schedule = _scheduleRepository.GetScheduleByProfessorId(professorId);
+			if (schedule == null) return NotFound();
+			return Ok(schedule);
+		}
+
 		[HttpDelete("{id}")]
 		[ProducesResponseType(200)]
 		public IActionResult DeleteSchedule(int id)
@@ -60,4 +68,3 @@ namespace SRSWebApi.Controllers
 		}
 	}
 }
-

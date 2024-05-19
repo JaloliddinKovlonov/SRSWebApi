@@ -3,6 +3,8 @@ using SRSWebApi.Data;
 using SRSWebApi.DTO;
 using SRSWebApi.Interfaces;
 using SRSWebApi.Models;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SRSWebApi.Repository
 {
@@ -10,11 +12,12 @@ namespace SRSWebApi.Repository
 	{
 		private readonly SrsContext _context;
 
-        public CourseRepository(SrsContext context)
-        {
-            _context = context;
-        }
-        public bool CreateCourse(CourseDTO course)
+		public CourseRepository(SrsContext context)
+		{
+			_context = context;
+		}
+
+		public bool CreateCourse(CourseDTO course)
 		{
 			Course courseToCreate = new Course
 			{
@@ -48,10 +51,38 @@ namespace SRSWebApi.Repository
 
 		public ICollection<Course> GetCourses()
 		{
-			return _context.Courses.
-				Include(s => s.Semester).
-				Include(c => c.Professor).
-				ToList();
+			return _context.Courses
+				.Include(s => s.Semester)
+				.Include(c => c.Professor)
+				.ToList();
+		}
+
+		public ICollection<AvailableCourseDTO> GetAvailableCoursesForStudent(int studentId)
+		{
+			var takenCourses = _context.StudentCourses
+				.Where(sc => sc.StudentId == studentId && (sc.IsCompleted == 1 || sc.IsCompleted == 0))
+				.Select(sc => sc.CourseId)
+				.ToList();
+
+			var availableCourses = _context.Courses
+				.Where(c => !takenCourses.Contains(c.CourseId))
+				.Include(c => c.Professor)
+				.Select(c => new AvailableCourseDTO
+				{
+					CourseId = c.CourseId,
+					CourseCode = c.CourseCode,
+					CourseName = c.CourseName,
+					CourseDescription = c.CourseDescription,
+					AcademicYear = c.AcademicYear,
+					SemesterId = c.SemesterId,
+					ProfessorId = c.ProfessorId,
+					CreditHours = c.CreditHours,
+					DepartmentId = c.DepartmentId,
+					ProfessorName = c.Professor != null ? $"{c.Professor.FirstName} {c.Professor.LastName}" : string.Empty
+				})
+				.ToList();
+
+			return availableCourses;
 		}
 
 		public bool Save()

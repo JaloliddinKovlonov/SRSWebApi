@@ -50,13 +50,36 @@ namespace SRSWebApi.Repository
 		public ICollection<ScheduleGetDTO?> GetScheduleByStudentId(int studentId)
 		{
 			ICollection<StudentCourse> studentCourses = _context.StudentCourses
-				.Where(sc => sc.StudentId == studentId)
+				.Where(sc => sc.StudentId == studentId && sc.IsCompleted == 0)
 				.ToList();
 
 			List<int> courseIds = studentCourses.Select(sc => sc.CourseId).ToList();
 
 			ICollection<Schedule> schedules = _context.Schedules
 				.Where(s => courseIds.Contains((int)s.CourseId))
+				.Include(s => s.Course)
+				.ThenInclude(c => c.Professor)
+				.ToList();
+
+			ICollection<ScheduleGetDTO?> schedulesToReturn = schedules.Select(s => new ScheduleGetDTO
+			{
+				StartTime = s.StartTime,
+				EndTime = s.EndTime,
+				DayOfWeek = s.DayOfWeek,
+				RoomNo = s.RoomNo,
+				CourseId = s.CourseId,
+				CourseName = s.Course?.CourseName,
+				CourseCode = s.Course?.CourseCode,
+				ProfessorName = s.Course?.Professor != null ? $"{s.Course.Professor.FirstName} {s.Course.Professor.LastName}" : null
+			}).ToList();
+
+			return schedulesToReturn;
+		}
+
+		public ICollection<ScheduleGetDTO?> GetScheduleByProfessorId(int professorId)
+		{
+			ICollection<Schedule> schedules = _context.Schedules
+				.Where(s => s.Course.ProfessorId == professorId)
 				.Include(s => s.Course)
 				.ThenInclude(c => c.Professor)
 				.ToList();
