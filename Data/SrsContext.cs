@@ -20,8 +20,6 @@ public partial class SrsContext : DbContext
 
     public virtual DbSet<Course> Courses { get; set; }
 
-    public virtual DbSet<CourseDetail> CourseDetails { get; set; }
-
     public virtual DbSet<Department> Departments { get; set; }
 
     public virtual DbSet<Faculty> Faculties { get; set; }
@@ -35,6 +33,8 @@ public partial class SrsContext : DbContext
     public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
+
+    public virtual DbSet<Schedule> Schedules { get; set; }
 
     public virtual DbSet<Semester> Semesters { get; set; }
 
@@ -54,13 +54,11 @@ public partial class SrsContext : DbContext
     {
         modelBuilder.Entity<Course>(entity =>
         {
-            entity.Property(e => e.CourseId).ValueGeneratedNever();
+            entity.HasOne(d => d.Department).WithMany(p => p.Courses).OnDelete(DeleteBehavior.ClientSetNull);
         });
 
         modelBuilder.Entity<Department>(entity =>
         {
-            entity.Property(e => e.DepartmentId).ValueGeneratedNever();
-
             entity.HasOne(d => d.Faculty).WithMany(p => p.Departments).OnDelete(DeleteBehavior.ClientSetNull);
         });
 
@@ -81,7 +79,6 @@ public partial class SrsContext : DbContext
 
         modelBuilder.Entity<StudentCourse>(entity =>
         {
-            entity.Property(e => e.StudentCourseId).ValueGeneratedNever();
             entity.Property(e => e.IsCompleted).HasDefaultValue(0);
 
             entity.HasOne(d => d.Course).WithMany(p => p.StudentCourses).OnDelete(DeleteBehavior.ClientSetNull);

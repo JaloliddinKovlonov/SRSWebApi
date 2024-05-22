@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SRSWebApi.DTO;
 using SRSWebApi.Interfaces;
 using SRSWebApi.Models;
 
@@ -49,21 +50,29 @@ namespace SRSWebApi.Controllers
 
         [HttpPost]
         [ProducesResponseType(200)]
-        public IActionResult CreateDepartment([FromBody] Department department)
+        public IActionResult CreateDepartment([FromBody] DepartmentDTO department)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var success = _departmentRepository.CreateDepartment(department);
-            if (!success)
+            Department departmentToCreate = new Department
+            {
+                DepartmentName = department.DepartmentName,
+                DepartmentCode = department.DepartmentCode,
+                Description = department.Description,
+                FacultyId = department.FacultyId,
+            };
+
+            var result = _departmentRepository.CreateDepartment(departmentToCreate);
+            if (!result)
             {
                 return StatusCode(500, "Failed to create department.");
             }
 
-            return CreatedAtAction(nameof(GetDepartmentById), new { id = department.DepartmentId }, department);
-        }
+			return Ok(result);
+		}
 
         [HttpDelete("{id}")]
         [ProducesResponseType(200)]

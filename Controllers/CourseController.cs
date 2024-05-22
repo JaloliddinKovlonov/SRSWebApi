@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SRSWebApi.DTO;
 using SRSWebApi.Interfaces;
-using SRSWebApi.Models;
-using SRSWebApi.Repository;
 
 namespace SRSWebApi.Controllers
 {
@@ -9,23 +8,24 @@ namespace SRSWebApi.Controllers
 	[ApiController]
 	public class CourseController : Controller
 	{
-		ICourseRepository _courseRepository;
-        public CourseController(ICourseRepository courseRepository)
-        {
-            _courseRepository = courseRepository;
-        }
+		private readonly ICourseRepository _courseRepository;
+
+		public CourseController(ICourseRepository courseRepository)
+		{
+			_courseRepository = courseRepository;
+		}
 
 		[HttpGet]
 		[ProducesResponseType(200)]
 		public IActionResult GetCourses()
 		{
-			var students = _courseRepository.GetCourses();
-			return Ok(students);
+			var courses = _courseRepository.GetCourses();
+			return Ok(courses);
 		}
 
 		[HttpPost]
 		[ProducesResponseType(200)]
-		public IActionResult CreateCourse([FromBody] Course course)
+		public IActionResult CreateCourse([FromBody] CourseDTO course)
 		{
 			var result = _courseRepository.CreateCourse(course);
 			return Ok(result);
@@ -35,9 +35,9 @@ namespace SRSWebApi.Controllers
 		[ProducesResponseType(200)]
 		public IActionResult GetCourseById(int id)
 		{
-			var student = _courseRepository.GetCourseById(id);
-			if (student == null) return NotFound();
-			return Ok(student);
+			var course = _courseRepository.GetCourseById(id);
+			if (course == null) return NotFound();
+			return Ok(course);
 		}
 
 		[HttpDelete("{id}")]
@@ -46,6 +46,14 @@ namespace SRSWebApi.Controllers
 		{
 			var result = _courseRepository.DeleteCourse(id);
 			return Ok(result);
+		}
+
+		[HttpGet("available/{studentId}")]
+		[ProducesResponseType(200)]
+		public IActionResult GetAvailableCoursesForStudent(int studentId)
+		{
+			var availableCourses = _courseRepository.GetAvailableCoursesForStudent(studentId);
+			return Ok(availableCourses);
 		}
 	}
 }

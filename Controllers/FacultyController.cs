@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SRSWebApi.DTO;
 using SRSWebApi.Interfaces;
 using SRSWebApi.Models;
 
@@ -33,22 +34,31 @@ namespace SRSWebApi.Controllers
             }
             return Ok(faculty);
         }
+
         [HttpPost]
         [ProducesResponseType(200)]
-        public IActionResult CreateFaculty([FromBody] Faculty faculty)
+        public IActionResult CreateFaculty([FromBody] FacultyDTO faculty)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var success = _facultyRepository.CreateFaculty(faculty);
+            var facultyToCreate = new Faculty
+            {
+				FacultyName = faculty.FacultyName,
+                FacultyCode = faculty.FacultyCode,
+                Description = faculty.Description,
+
+		};
+
+            var success = _facultyRepository.CreateFaculty(facultyToCreate);
             if (!success)
             {
                 return StatusCode(500, "Failed to create faculty.");
             }
 
-            return CreatedAtAction(nameof(GetFacultyById), new { id = faculty.FacultyId }, faculty);
+            return Ok(200);
         }
 
         [HttpDelete("{id}")]

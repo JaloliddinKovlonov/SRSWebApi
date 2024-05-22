@@ -12,8 +12,6 @@ public partial class Course
     [Key]
     public int CourseId { get; set; }
 
-    public int CourseDetailsId { get; set; }
-
     public string CreatedOn { get; set; } = null!;
 
     public int CreatedById { get; set; }
@@ -30,23 +28,41 @@ public partial class Course
 
     public int? DeletedById { get; set; }
 
-    public string? StartTime { get; set; }
-
-    public string? EndTime { get; set; }
-
-    public int? DaysOfWeek { get; set; }
-
-    public string? ClassRoomNo { get; set; }
-
     public string? AcademicYear { get; set; }
 
     public int? SemesterId { get; set; }
 
     public int? ProfessorId { get; set; }
 
+    public string CourseCode { get; set; } = null!;
+
+    public string CourseName { get; set; } = null!;
+
+    public string? CourseDescription { get; set; }
+
+    public int? CreditHours { get; set; }
+
+    public int DepartmentId { get; set; }
+
+    public int? PrerequisiteCourseId { get; set; }
+
+    [ForeignKey("DepartmentId")]
+    [InverseProperty("Courses")]
+    public virtual Department Department { get; set; } = null!;
+
+    [InverseProperty("PrerequisiteCourse")]
+    public virtual ICollection<Course> InversePrerequisiteCourse { get; set; } = new List<Course>();
+
+    [ForeignKey("PrerequisiteCourseId")]
+    [InverseProperty("InversePrerequisiteCourse")]
+    public virtual Course? PrerequisiteCourse { get; set; }
+
     [ForeignKey("ProfessorId")]
     [InverseProperty("Courses")]
     public virtual Professor? Professor { get; set; }
+
+    [InverseProperty("Course")]
+    public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
 
     [ForeignKey("SemesterId")]
     [InverseProperty("Courses")]
