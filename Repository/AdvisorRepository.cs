@@ -14,18 +14,19 @@ namespace SRSWebApi.Repository
         private readonly SrsContext _context;
         private IProfessorRepository _professorRepository;
         private IUserRepository _userRepository;
-        public AdvisorRepository(SrsContext context, IProfessorRepository professorRepository, IUserRepository userRepository)
+        private IStudentRepository _studentRepository;
+        public AdvisorRepository(SrsContext context, IProfessorRepository professorRepository, IUserRepository userRepository, IStudentRepository studentRepository)
         {
             _context = context;
             _professorRepository = professorRepository;
             _userRepository = userRepository;
+            _studentRepository = studentRepository;
         }
 
         public ICollection<Advisor> GetAdvisors()
         {
             return _context.Advisors
                 .Include(a => a.Professor)
-                .Include(a => a.Department)
                 .ToList();
         }
 
@@ -33,7 +34,7 @@ namespace SRSWebApi.Repository
         {
             return _context.Advisors
                 .Include(a => a.Professor)
-                .Include(a => a.Department)
+                .Include(s => s.Students)
                 .FirstOrDefault(a => a.AdvisorId == id);
         }
 
@@ -41,8 +42,7 @@ namespace SRSWebApi.Repository
         {
             var advisor = new Advisor
             {
-                ProfessorId = advisorDTO.ProfessorId,
-                DepartmentId = advisorDTO.DepartmentId
+                ProfessorId = advisorDTO.ProfessorId
             };
 
             _context.Advisors.Add(advisor);
@@ -64,8 +64,6 @@ namespace SRSWebApi.Repository
             if (advisor == null) return false;
 
             advisor.ProfessorId = advisorDTO.ProfessorId;
-            advisor.DepartmentId = advisorDTO.DepartmentId;
-
             _context.Advisors.Update(advisor);
             return Save();
         }

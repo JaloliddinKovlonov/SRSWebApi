@@ -13,12 +13,6 @@ public partial class Advisor
 
     public int? ProfessorId { get; set; }
 
-    public int? DepartmentId { get; set; }
-
-    [ForeignKey("DepartmentId")]
-    [InverseProperty("Advisors")]
-    public virtual Department? Department { get; set; }
-
     [ForeignKey("ProfessorId")]
     [InverseProperty("Advisors")]
     public virtual Professor? Professor { get; set; }

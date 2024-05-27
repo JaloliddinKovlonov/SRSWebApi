@@ -23,7 +23,6 @@ namespace SRSWebApi.Controllers
             return Ok(advisors);
         }
 
-        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
         public IActionResult GetAdvisorById(int id)
