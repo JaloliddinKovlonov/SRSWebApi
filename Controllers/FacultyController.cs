@@ -23,7 +23,9 @@ namespace SRSWebApi.Controllers
             var faculties = _facultyRepository.Faculty();
             return Ok(faculties);
         }
-        [HttpGet("{id}")]
+
+		[ApiExplorerSettings(IgnoreApi = true)]
+		[HttpGet("{id}")]
         [ProducesResponseType(200)]
         public IActionResult GetFacultyById(int id)
         {
@@ -61,7 +63,8 @@ namespace SRSWebApi.Controllers
             return Ok(200);
         }
 
-        [HttpDelete("{id}")]
+		[ApiExplorerSettings(IgnoreApi = true)]
+		[HttpDelete("{id}")]
         [ProducesResponseType(200)]
         public IActionResult DeleteFaculty(int id)
         {

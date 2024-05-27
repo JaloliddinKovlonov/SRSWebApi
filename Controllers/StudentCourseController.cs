@@ -15,6 +15,7 @@ namespace SRSWebApi.Controllers
 			_studentCourseRepository = studentCourseRepository;
 		}
 
+		[ApiExplorerSettings(IgnoreApi = true)]
 		[HttpGet]
 		[ProducesResponseType(200)]
 		public IActionResult GetStudentCourses()
@@ -23,6 +24,7 @@ namespace SRSWebApi.Controllers
 			return Ok(studentCourses);
 		}
 
+		[ApiExplorerSettings(IgnoreApi = true)]
 		[HttpGet("{id}")]
 		[ProducesResponseType(200)]
 		public IActionResult GetStudentCourseById(int id)
@@ -30,6 +32,15 @@ namespace SRSWebApi.Controllers
 			var studentCourse = _studentCourseRepository.GetStudentCourseById(id);
 			if (studentCourse == null) return NotFound();
 			return Ok(studentCourse);
+		}
+
+		[HttpGet("student/{studentId}")]
+		[ProducesResponseType(200)]
+		public IActionResult GetStudentCoursesByStudentId(int studentId)
+		{
+			var studentCourses = _studentCourseRepository.GetStudentCoursesByStudentId(studentId);
+			if (studentCourses == null || !studentCourses.Any()) return NotFound();
+			return Ok(studentCourses);
 		}
 
 		[HttpPost]

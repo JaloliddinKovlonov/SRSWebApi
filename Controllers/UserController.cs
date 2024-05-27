@@ -37,20 +37,34 @@ namespace SRSWebApi.Controllers
         }
 
 
-        [HttpPost("SignIn")]
-        [ProducesResponseType(200)]
-        public IActionResult SignIn(string username, string password)
-        {
-            var user = _userRepository.SignIn(username, password);
+		[HttpPost("SignIn")]
+		[ProducesResponseType(200)]
+		public IActionResult SignIn([FromBody] UserSignInDTO userSignInDTO)
+		{
+			var user = _userRepository.SignIn(userSignInDTO);
 
-			if(user == null)
+			if (user == null)
 				return Unauthorized("Invalid credentials or user is inactive.");
 
 			var refreshToken = _userRepository.GenerateOrUpdateRefreshToken(user.UserId, HttpContext.Request);
 			var jwtToken = _userRepository.CreateToken(user);
 
-			return Ok(new { jwt = jwtToken, refreshToken = refreshToken.Token });
+			return Ok(new
+			{
+				jwt = jwtToken,
+				refreshToken = refreshToken.Token,
+				user = new
+				{
+					user.UserId,
+					user.UserName,
+					user.Email,
+					RoleName = user.Role.RoleName,
+					user.LastLogin,
+					user.CreatedOn
+				}
+			});
 		}
+
 
 
 		[HttpPost("refresh-token")]

@@ -15,6 +15,7 @@ namespace SRSWebApi.Controllers
 			_courseRepository = courseRepository;
 		}
 
+
 		[HttpGet]
 		[ProducesResponseType(200)]
 		public IActionResult GetCourses()
@@ -31,6 +32,7 @@ namespace SRSWebApi.Controllers
 			return Ok(result);
 		}
 
+		[ApiExplorerSettings(IgnoreApi = true)]
 		[HttpGet("{id}")]
 		[ProducesResponseType(200)]
 		public IActionResult GetCourseById(int id)
@@ -40,6 +42,7 @@ namespace SRSWebApi.Controllers
 			return Ok(course);
 		}
 
+		[ApiExplorerSettings(IgnoreApi = true)]
 		[HttpDelete("{id}")]
 		[ProducesResponseType(200)]
 		public IActionResult DeleteCourse(int id)
@@ -50,9 +53,9 @@ namespace SRSWebApi.Controllers
 
 		[HttpGet("available/{studentId}")]
 		[ProducesResponseType(200)]
-		public IActionResult GetAvailableCoursesForStudent(int studentId)
+		public IActionResult GetAvailableCoursesForStudent(int studentId, int? departmentId, int? facultyId)
 		{
-			var availableCourses = _courseRepository.GetAvailableCoursesForStudent(studentId);
+			var availableCourses = _courseRepository.GetAvailableCoursesForStudent(studentId, departmentId, facultyId);
 			return Ok(availableCourses);
 		}
 	}

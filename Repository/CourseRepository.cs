@@ -51,13 +51,10 @@ namespace SRSWebApi.Repository
 
 		public ICollection<Course> GetCourses()
 		{
-			return _context.Courses
-				.Include(s => s.Semester)
-				.Include(c => c.Professor)
-				.ToList();
+			return _context.Courses.ToList();
 		}
 
-		public ICollection<AvailableCourseDTO> GetAvailableCoursesForStudent(int studentId)
+		public ICollection<AvailableCourseDTO> GetAvailableCoursesForStudent(int studentId, int? departmentId, int? facultyId)
 		{
 			var takenCourses = _context.StudentCourses
 				.Where(sc => sc.StudentId == studentId && (sc.IsCompleted == 1 || sc.IsCompleted == 0))
@@ -65,8 +62,10 @@ namespace SRSWebApi.Repository
 				.ToList();
 
 			var availableCourses = _context.Courses
-				.Where(c => !takenCourses.Contains(c.CourseId))
 				.Include(c => c.Professor)
+				.Include(s => s.Schedules)
+				.ToList()
+				.Where(c => (c.PrerequisiteCourseId == 0 || c.PrerequisiteCourseId == null || takenCourses.Contains(c.PrerequisiteCourseId)) && !takenCourses.Contains(c.CourseId))
 				.Select(c => new AvailableCourseDTO
 				{
 					CourseId = c.CourseId,
@@ -78,9 +77,21 @@ namespace SRSWebApi.Repository
 					ProfessorId = c.ProfessorId,
 					CreditHours = c.CreditHours,
 					DepartmentId = c.DepartmentId,
-					ProfessorName = c.Professor != null ? $"{c.Professor.FirstName} {c.Professor.LastName}" : string.Empty
+					Schedule = c.Schedules.ToList(),
+					ProfessorName = c.Professor != null ? $"{c.Professor.FirstName} {c.Professor.LastName}" : string.Empty,
 				})
 				.ToList();
+
+			if (departmentId != null)
+			{
+				availableCourses = availableCourses.Where(c => c.DepartmentId == departmentId).ToList();
+			}
+
+			if (facultyId != null)
+			{
+				var departmentsInFaculty = _context.Departments.Where(d => d.FacultyId == facultyId).Select(d => d.DepartmentId).ToList();
+				availableCourses = availableCourses.Where(c => departmentsInFaculty.Contains(c.DepartmentId)).ToList();
+			}
 
 			return availableCourses;
 		}

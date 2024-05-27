@@ -26,9 +26,7 @@ namespace SRSWebApi.Repository
 		}
         public User SignUp(UserSignUpDTO user)
         {
-            string password = RandomStringGenerator();
-            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
-			string email = user.FirstName + "." +  user.LastName + "@final.edu.tr";
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
             User newUser = new User();
             var userName = user.FirstName + '.' + user.LastName;
@@ -36,7 +34,7 @@ namespace SRSWebApi.Repository
             newUser.UserName = userName;
             newUser.RoleId = user.RoleId;
             newUser.Password = hashedPassword;
-            newUser.Email = email;
+            newUser.Email = user.Email;
             newUser.LastLogin = DateTime.Now;
             newUser.CreatedOn = DateTime.Now;
             newUser.ModifiedOn = DateTime.Now;
@@ -47,7 +45,6 @@ namespace SRSWebApi.Repository
 
             if (Save())
             {
-                newUser.Password = password;
                 return newUser;
             }
             else
@@ -57,11 +54,11 @@ namespace SRSWebApi.Repository
             
         }
 
-        public User SignIn(string username, string password)
+        public User SignIn(UserSignInDTO userSignInDTO)
         {
-            var user = GetUserByUsername(username);
+			var user = _context.Users.Include(u => u.Role).FirstOrDefault(u => u.Email == userSignInDTO.Email);
 
-			if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password) || (user.IsActive == 0))
+			if (user == null || !BCrypt.Net.BCrypt.Verify(userSignInDTO.Password, user.Password) || (user.IsActive == 0))
 				return null;
 
 			if (user == null) return null;
@@ -73,31 +70,9 @@ namespace SRSWebApi.Repository
             return user;
 
         }
-        public User GetUserByUsername(string username)
+        public User GetUserByUsername(string email)
         {
-            return _context.Users.FirstOrDefault(u => u.UserName == username);
-        }
-
-
-
-        string RandomStringGenerator()
-        {
-            Random res = new Random();
-
-            String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-            int size = 8;
-
-            String ran = "";
-
-            for (int i = 0; i < size; i++)
-            {
-
-                int x = res.Next(62);
-
-                ran = ran + str[x];
-            }
-
-            return ran;
+            return _context.Users.FirstOrDefault(u => u.Email == email);
         }
 
 

@@ -22,6 +22,7 @@ namespace SRSWebApi.Repository
 			return _context.StudentCourses
 				.Include(sc => sc.Course)
 				.Include(sc => sc.Student)
+				.Include(sc => sc.Course.Professor)
 				.Select(sc => new StudentCourseGetDTO
 				{
 					StudentCourseId = sc.StudentCourseId,
@@ -29,6 +30,28 @@ namespace SRSWebApi.Repository
 					CourseId = sc.CourseId,
 					CourseName = sc.Course.CourseName,
 					StudentName = $"{sc.Student.FirstName} {sc.Student.LastName}",
+					ProfessorName = $"{sc.Course.Professor.FirstName} {sc.Course.Professor.LastName}",
+					IsApproved = sc.IsApproved, 
+					IsCompleted = sc.IsCompleted 
+				})
+				.ToList();
+		}
+
+		public ICollection<StudentCourseGetDTO> GetStudentCoursesByStudentId(int studentId)
+		{
+			return _context.StudentCourses
+				.Include(sc => sc.Course)
+				.Include(sc => sc.Student)
+				.Include(sc => sc.Course.Professor) 
+				.Where(sc => sc.StudentId == studentId)
+				.Select(sc => new StudentCourseGetDTO
+				{
+					StudentCourseId = sc.StudentCourseId,
+					StudentId = sc.StudentId,
+					CourseId = sc.CourseId,
+					CourseName = sc.Course.CourseName,
+					StudentName = $"{sc.Student.FirstName} {sc.Student.LastName}",
+					ProfessorName = $"{sc.Course.Professor.FirstName} {sc.Course.Professor.LastName}", 
 					IsApproved = sc.IsApproved,
 					IsCompleted = sc.IsCompleted
 				})
@@ -40,6 +63,7 @@ namespace SRSWebApi.Repository
 			return _context.StudentCourses
 				.Include(sc => sc.Course)
 				.Include(sc => sc.Student)
+				.Include(sc => sc.Course.Professor)
 				.Where(sc => sc.StudentCourseId == id)
 				.Select(sc => new StudentCourseGetDTO
 				{
@@ -48,15 +72,16 @@ namespace SRSWebApi.Repository
 					CourseId = sc.CourseId,
 					CourseName = sc.Course.CourseName,
 					StudentName = $"{sc.Student.FirstName} {sc.Student.LastName}",
+					ProfessorName = $"{sc.Course.Professor.FirstName} {sc.Course.Professor.LastName}",
 					IsApproved = sc.IsApproved,
 					IsCompleted = sc.IsCompleted
 				})
 				.FirstOrDefault();
 		}
 
-		public bool CreateStudentCourse(StudentCourseCreateDTO studentCourseDTO)
+		public StudentCourse CreateStudentCourse(StudentCourseCreateDTO studentCourseDTO)
 		{
-			StudentCourse studentCourse = new StudentCourse
+			var studentCourse = new StudentCourse
 			{
 				StudentId = studentCourseDTO.StudentId,
 				CourseId = studentCourseDTO.CourseId,
@@ -64,7 +89,21 @@ namespace SRSWebApi.Repository
 			};
 
 			_context.StudentCourses.Add(studentCourse);
-			return Save();
+			var success = Save();
+			if (success)
+			{
+				return GetStudentCourseBySCourseId(studentCourse.StudentCourseId);
+			}
+			return null;
+		}
+
+		public StudentCourse GetStudentCourseBySCourseId(int id)
+		{
+			return _context.StudentCourses
+				.Include(sc => sc.Course)
+				.Include(sc => sc.Student)
+				.Include(sc => sc.Course.Professor)
+				.FirstOrDefault(sc => sc.StudentCourseId == id);
 		}
 
 		public bool UpdateStudentCourse(int id, StudentCourseUpdateDTO studentCourseDTO)

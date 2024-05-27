@@ -1,4 +1,6 @@
-﻿namespace SRSWebApi.DTO
+﻿using SRSWebApi.Models;
+
+namespace SRSWebApi.DTO
 {
 	public class CourseDTO
 	{
@@ -33,5 +35,6 @@
 		public int? CreditHours { get; set; }
 		public int DepartmentId { get; set; }
 		public string ProfessorName { get; set; } = null!;
+		public List<Schedule> Schedule { get; set; } = new List<Schedule>();
 	}
 }

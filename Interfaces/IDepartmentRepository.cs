@@ -6,8 +6,9 @@ namespace SRSWebApi.Interfaces
     {
         ICollection<Department> Departments();
         Department GetDepartmentById(int id);
-        Department GetDepartmentByFacultyId(int id);
-        bool CreateDepartment(Department department);
+        public List<Department> GetDepartmentByFacultyId(int id);
+
+		bool CreateDepartment(Department department);
         bool DeleteDepartment(int id);
     }
 }

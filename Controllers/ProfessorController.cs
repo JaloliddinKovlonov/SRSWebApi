@@ -23,6 +23,7 @@ namespace SRSWebApi.Controllers
 			return Ok(professors);
 		}
 
+		[ApiExplorerSettings(IgnoreApi = true)]
 		[HttpGet("{id}")]
 		[ProducesResponseType(200)]
 		public IActionResult GetProfessorById(int id)
@@ -37,9 +38,14 @@ namespace SRSWebApi.Controllers
 		public IActionResult CreateProfessor([FromBody] ProfessorCreateDTO professor)
 		{
 			var result = _professorRepository.CreateProfessor(professor);
+			if (!result)
+			{
+				return BadRequest("Failed to create professor.");
+			}
 			return Ok(result);
 		}
 
+		[ApiExplorerSettings(IgnoreApi = true)]
 		[HttpPut("{id}")]
 		[ProducesResponseType(200)]
 		public IActionResult UpdateProfessor(int id, [FromBody] ProfessorUpdateDTO professor)
@@ -48,6 +54,7 @@ namespace SRSWebApi.Controllers
 			return Ok(result);
 		}
 
+		[ApiExplorerSettings(IgnoreApi = true)]
 		[HttpDelete("{id}")]
 		[ProducesResponseType(200)]
 		public IActionResult DeleteProfessor(int id)

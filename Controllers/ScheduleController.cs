@@ -16,6 +16,7 @@ namespace SRSWebApi.Controllers
 			_scheduleRepository = scheduleRepository;
 		}
 
+		[ApiExplorerSettings(IgnoreApi = true)]
 		[HttpGet]
 		[ProducesResponseType(200)]
 		public IActionResult GetSchedules()
@@ -32,6 +33,7 @@ namespace SRSWebApi.Controllers
 			return Ok(result);
 		}
 
+		[ApiExplorerSettings(IgnoreApi = true)]
 		[HttpGet("{id}")]
 		[ProducesResponseType(200)]
 		public IActionResult GetScheduleById(int id)
@@ -59,6 +61,7 @@ namespace SRSWebApi.Controllers
 			return Ok(schedule);
 		}
 
+		[ApiExplorerSettings(IgnoreApi = true)]
 		[HttpDelete("{id}")]
 		[ProducesResponseType(200)]
 		public IActionResult DeleteSchedule(int id)

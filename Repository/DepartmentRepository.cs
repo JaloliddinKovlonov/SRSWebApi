@@ -36,9 +36,9 @@ namespace SRSWebApi.Repository
             return _context.Departments.ToList();
         }
 
-        public Department GetDepartmentByFacultyId(int id)
+        public List<Department> GetDepartmentByFacultyId(int id)
         {
-            return _context.Departments.FirstOrDefault(d => d.FacultyId == id);
+            return _context.Departments.Where(d => d.FacultyId == id).ToList();
         }
 
         public Department GetDepartmentById(int id)

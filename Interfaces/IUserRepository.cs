@@ -7,7 +7,7 @@ namespace SRSWebApi.Interfaces
     public interface IUserRepository
     {
         User SignUp(UserSignUpDTO user);
-		User SignIn(string UserName, string Password);
+		User SignIn(UserSignInDTO user);
         User GetUserByUsername(string UserName);
 		bool UserExists(string username);
 		bool UserExistsByName(string firstName, string lastName);

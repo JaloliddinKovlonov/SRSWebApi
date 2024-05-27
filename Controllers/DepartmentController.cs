@@ -16,7 +16,7 @@ namespace SRSWebApi.Controllers
             _departmentRepository = departmentRepository;
         }
 
-        [HttpGet]
+		[HttpGet]
         [ProducesResponseType(200)]
         public IActionResult Departments()
         {
@@ -24,7 +24,8 @@ namespace SRSWebApi.Controllers
             return Ok(departments);
         }
 
-        [HttpGet("{id}")]
+		[ApiExplorerSettings(IgnoreApi = true)]
+		[HttpGet("{id}")]
         [ProducesResponseType(200)]
         public IActionResult GetDepartmentById(int id)
         {
@@ -35,6 +36,7 @@ namespace SRSWebApi.Controllers
             }
             return Ok(department);
         }
+
 
         [HttpGet("faculty/{facultyId}")]
         [ProducesResponseType(200)]
@@ -74,7 +76,8 @@ namespace SRSWebApi.Controllers
 			return Ok(result);
 		}
 
-        [HttpDelete("{id}")]
+		[ApiExplorerSettings(IgnoreApi = true)]
+		[HttpDelete("{id}")]
         [ProducesResponseType(200)]
         public IActionResult DeleteDepartment(int id)
         {

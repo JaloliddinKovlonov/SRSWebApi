@@ -33,12 +33,26 @@ namespace SRSWebApi.Repository
 
 		public bool CreateProfessor(ProfessorCreateDTO professorDTO)
 		{
-			Professor professor = new Professor
+			var user = new User
+			{
+				UserName = $"{professorDTO.FirstName} {professorDTO.LastName}",
+				Email = professorDTO.Email,
+				Password = BCrypt.Net.BCrypt.HashPassword(professorDTO.Password),
+				CreatedOn = DateTime.UtcNow,
+				ModifiedOn = DateTime.UtcNow,
+				IsActive = 1,
+				RoleId = 3
+			};
+
+			_context.Users.Add(user);
+			_context.SaveChanges();
+
+			var professor = new Professor
 			{
 				FirstName = professorDTO.FirstName,
 				LastName = professorDTO.LastName,
 				DepartmentId = professorDTO.DepartmentId,
-				UserId = professorDTO.UserId
+				UserId = user.UserId
 			};
 
 			_context.Professors.Add(professor);
