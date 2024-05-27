@@ -1,4 +1,5 @@
-﻿using SRSWebApi.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using SRSWebApi.Data;
 using SRSWebApi.DTO;
 using SRSWebApi.Interfaces;
 using SRSWebApi.Models;
@@ -36,7 +37,8 @@ namespace SRSWebApi.Repository
 				FirstName = studentCreateDTO.FirstName,
 				LastName = studentCreateDTO.LastName,
 				DepartmentId = studentCreateDTO.DepartmentId,
-				AdmissionDate = DateTime.UtcNow,
+                AdvisorId = studentCreateDTO.AdvisorId,
+                AdmissionDate = DateTime.UtcNow,
 				UserId = user.UserId
 			};
 
@@ -58,17 +60,24 @@ namespace SRSWebApi.Repository
 
 		public Student GetStudentById(int id)
 		{
-			return _context.Students.FirstOrDefault(p => p.StudentId == id);
+			return _context.Students
+                .Include(s => s.Advisor)
+                .FirstOrDefault(p => p.StudentId == id);
 		}
 
 		public ICollection<Student> GetStudents()
 		{
-			return _context.Students.ToList();
+			return _context.Students
+                .Include(s => s.Advisor)
+                .ToList();
 		}
 
 		public ICollection<Student> GetStudentsByDepartmentId(int departmentId)
 		{
-			return _context.Students.Where(s => s.DepartmentId == departmentId).ToList();
+			return _context.Students
+                .Include(s => s.Advisor)
+				.Where(s => s.DepartmentId == departmentId)
+				.ToList();
 		}
 
 		public bool Save()

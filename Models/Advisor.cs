@@ -9,11 +9,20 @@ namespace SRSWebApi.Models;
 public partial class Advisor
 {
     [Key]
-    public byte[] AdvisorId { get; set; } = null!;
+    public int AdvisorId { get; set; }
 
     public int? ProfessorId { get; set; }
+
+    public int? DepartmentId { get; set; }
+
+    [ForeignKey("DepartmentId")]
+    [InverseProperty("Advisors")]
+    public virtual Department? Department { get; set; }
 
     [ForeignKey("ProfessorId")]
     [InverseProperty("Advisors")]
     public virtual Professor? Professor { get; set; }
+
+    [InverseProperty("Advisor")]
+    public virtual ICollection<Student> Students { get; set; } = new List<Student>();
 }

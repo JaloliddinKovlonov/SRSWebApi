@@ -74,6 +74,8 @@ public partial class SrsContext : DbContext
 
         modelBuilder.Entity<Student>(entity =>
         {
+            entity.HasOne(d => d.Advisor).WithMany(p => p.Students).OnDelete(DeleteBehavior.ClientSetNull);
+
             entity.HasOne(d => d.User).WithMany(p => p.Students).OnDelete(DeleteBehavior.ClientSetNull);
         });
 

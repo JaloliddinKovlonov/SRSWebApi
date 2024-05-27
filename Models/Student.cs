@@ -34,6 +34,10 @@ public partial class Student
 
     public int UserId { get; set; }
 
+    [ForeignKey("AdvisorId")]
+    [InverseProperty("Students")]
+    public virtual Advisor Advisor { get; set; } = null!;
+
     [InverseProperty("Student")]
     public virtual ICollection<StudentCourse> StudentCourses { get; set; } = new List<StudentCourse>();
 

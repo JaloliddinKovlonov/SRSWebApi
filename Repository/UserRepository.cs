@@ -182,5 +182,10 @@ namespace SRSWebApi.Repository
 
 			return tokenHandler.WriteToken(token);
 		}
-	}
+
+        public User GetUserByUserId(int userId)
+        {
+			return _context.Users.Where(u => u.UserId == userId).FirstOrDefault();
+        }
+    }
 }

@@ -15,5 +15,6 @@ namespace SRSWebApi.Interfaces
 		ActionResult<object> RefreshToken(string token, HttpRequest request);
 		string GetIpAddress(HttpRequest request);
 		string CreateToken(User user);
+		User GetUserByUserId(int userId);
 	}
 }
