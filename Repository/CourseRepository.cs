@@ -65,7 +65,7 @@ namespace SRSWebApi.Repository
 				.Include(c => c.Professor)
 				.Include(s => s.Schedules)
 				.ToList()
-				.Where(c => (c.PrerequisiteCourseId == 0 || c.PrerequisiteCourseId == null || takenCourses.Contains(c.PrerequisiteCourseId)) && !takenCourses.Contains(c.CourseId))
+				.Where(c => (c.PrerequisiteCourseId == 0 || c.PrerequisiteCourseId == null || takenCourses.Contains((int)c.PrerequisiteCourseId)) && !takenCourses.Contains(c.CourseId))
 				.Select(c => new AvailableCourseDTO
 				{
 					CourseId = c.CourseId,
