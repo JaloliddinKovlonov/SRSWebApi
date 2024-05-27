@@ -10,7 +10,16 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 builder.Services.AddControllers();
+
+builder.Services.AddCors(options =>
+{
+	options.AddPolicy("AllowAnyOrigin",
+		builder => builder.AllowAnyOrigin()
+						  .AllowAnyMethod()
+						  .AllowAnyHeader());
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -24,9 +33,7 @@ builder.Services.AddSwaggerGen(c =>
 
 	c.OperationFilter<SecurityRequirementsOperationFilter>();
 	c.SwaggerDoc("v1", new OpenApiInfo { Title = "srs.webapi", Version = "1.0.0" });
-
 });
-
 
 builder.Services.AddAuthentication().AddJwtBearer(
 	options =>
@@ -58,18 +65,18 @@ builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 builder.Services.AddScoped<IProfessorRepository, ProfessorRepository>();
 builder.Services.AddScoped<IStudentCourseRepository, StudentCourseRepository>();
 
-
 builder.Services.AddDbContext<SrsContext>(options =>
-		options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+	options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+	app.UseSwagger();
+	app.UseSwaggerUI();
 }
+
+app.UseCors("AllowAnyOrigin");
 
 app.UseAuthorization();
 
