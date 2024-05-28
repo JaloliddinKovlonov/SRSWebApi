@@ -31,7 +31,7 @@ namespace SRSWebApi.Repository
 				.FirstOrDefault(p => p.ProfessorId == id);
 		}
 
-		public bool CreateProfessor(ProfessorCreateDTO professorDTO)
+		public int CreateProfessor(ProfessorCreateDTO professorDTO)
 		{
 			var user = new User
 			{
@@ -56,7 +56,12 @@ namespace SRSWebApi.Repository
 			};
 
 			_context.Professors.Add(professor);
-			return Save();
+			if (Save())
+			{
+				return professor.ProfessorId;
+			}
+
+			return 0;
 		}
 
 		public bool UpdateProfessor(int id, ProfessorUpdateDTO professorDTO)
@@ -87,5 +92,6 @@ namespace SRSWebApi.Repository
 			var saved = _context.SaveChanges();
 			return saved > 0 ? true : false;
 		}
-	}
+
+    }
 }

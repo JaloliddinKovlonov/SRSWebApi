@@ -8,7 +8,7 @@ namespace SRSWebApi.Interfaces
 	{
 		ICollection<Professor> GetProfessors();
 		Professor GetProfessorById(int id);
-		bool CreateProfessor(ProfessorCreateDTO professor);
+		int CreateProfessor(ProfessorCreateDTO professor);
 		bool UpdateProfessor(int id, ProfessorUpdateDTO professor);
 		bool DeleteProfessor(int id);
 		bool Save();
