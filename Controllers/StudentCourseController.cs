@@ -43,15 +43,15 @@ namespace SRSWebApi.Controllers
 			return Ok(studentCourses);
 		}
 
-		[HttpPost]
-		[ProducesResponseType(200)]
-		public IActionResult CreateStudentCourse([FromBody] StudentCourseCreateDTO studentCourse)
-		{
-			var result = _studentCourseRepository.CreateStudentCourse(studentCourse);
-			return Ok(result);
-		}
+        [HttpPost]
+        [ProducesResponseType(200)]
+        public IActionResult CreateStudentCourses([FromBody] StudentCourseCreateDTO studentCourse)
+        {
+            var result = _studentCourseRepository.CreateStudentCourses(studentCourse);
+            return Ok(result);
+        }
 
-		[HttpPut("{id}")]
+        [HttpPut("{id}")]
 		[ProducesResponseType(200)]
 		public IActionResult UpdateStudentCourse(int id, [FromBody] StudentCourseUpdateDTO studentCourse)
 		{

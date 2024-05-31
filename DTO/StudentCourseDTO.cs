@@ -4,8 +4,8 @@
 	public class StudentCourseCreateDTO
 	{
 		public int StudentId { get; set; }
-		public int CourseId { get; set; }
-		public int IsApproved { get; set; }
+        public List<int> CourseId { get; set; } = new List<int>();
+        public int IsApproved { get; set; }
 	}
 
 	public class StudentCourseUpdateDTO

@@ -79,25 +79,24 @@ namespace SRSWebApi.Repository
 				.FirstOrDefault();
 		}
 
-		public StudentCourse CreateStudentCourse(StudentCourseCreateDTO studentCourseDTO)
-		{
-			var studentCourse = new StudentCourse
-			{
-				StudentId = studentCourseDTO.StudentId,
-				CourseId = studentCourseDTO.CourseId,
-				IsApproved = studentCourseDTO.IsApproved
-			};
+        public bool CreateStudentCourses(StudentCourseCreateDTO studentCourseDTO)
+        {
+            foreach (var courseId in studentCourseDTO.CourseId)
+            {
+                var studentCourse = new StudentCourse
+                {
+                    StudentId = studentCourseDTO.StudentId,
+                    CourseId = courseId,
+                    IsApproved = studentCourseDTO.IsApproved
+                };
 
-			_context.StudentCourses.Add(studentCourse);
-			var success = Save();
-			if (success)
-			{
-				return GetStudentCourseBySCourseId(studentCourse.StudentCourseId);
-			}
-			return null;
-		}
+                _context.StudentCourses.Add(studentCourse);
+            }
 
-		public StudentCourse GetStudentCourseBySCourseId(int id)
+            return Save();
+        }
+
+        public StudentCourse GetStudentCourseBySCourseId(int id)
 		{
 			return _context.StudentCourses
 				.Include(sc => sc.Course)

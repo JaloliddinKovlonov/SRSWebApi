@@ -15,8 +15,16 @@ namespace SRSWebApi.Controllers
 			_courseRepository = courseRepository;
 		}
 
+        [HttpGet("department/{departmentId}")]
+        [ProducesResponseType(200)]
+        public IActionResult GetCoursesByDepartmentId(int departmentId)
+        {
+            var courses = _courseRepository.GetCoursesByDepartmentId(departmentId);
+            return Ok(courses);
+        }
 
-		[HttpGet]
+
+        [HttpGet]
 		[ProducesResponseType(200)]
 		public IActionResult GetCourses()
 		{

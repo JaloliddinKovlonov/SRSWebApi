@@ -96,7 +96,30 @@ namespace SRSWebApi.Repository
 			return availableCourses;
 		}
 
-		public bool Save()
+        public ICollection<CourseDTO> GetCoursesByDepartmentId(int departmentId)
+        {
+            var courses = _context.Courses
+                .Include(c => c.Professor)
+                .Where(c => c.DepartmentId == departmentId)
+                .Select(c => new CourseDTO
+                {
+                    AcademicYear = c.AcademicYear,
+                    SemesterId = c.SemesterId,
+                    ProfessorId = c.ProfessorId,
+                    CourseCode = c.CourseCode,
+                    CourseName = c.CourseName,
+                    CourseDescription = c.CourseDescription,
+                    CreditHours = c.CreditHours,
+                    DepartmentId = c.DepartmentId,
+                    PrerequisiteCourseId = c.PrerequisiteCourseId,
+                    ProfessorName = c.Professor != null ? $"{c.Professor.FirstName} {c.Professor.LastName}" : string.Empty
+                })
+                .ToList();
+
+            return courses;
+        }
+
+        public bool Save()
 		{
 			var saved = _context.SaveChanges();
 			return saved > 0 ? true : false;

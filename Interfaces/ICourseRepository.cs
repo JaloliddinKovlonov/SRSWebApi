@@ -10,5 +10,6 @@ namespace SRSWebApi.Interfaces
 		bool CreateCourse(CourseDTO course);
 		bool DeleteCourse(int id);
 		public ICollection<AvailableCourseDTO> GetAvailableCoursesForStudent(int studentId, int? departmentId, int? facultyId);
-	}
+        public ICollection<CourseDTO> GetCoursesByDepartmentId(int departmentId);
+    }
 }

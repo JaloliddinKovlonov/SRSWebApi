@@ -9,7 +9,7 @@ namespace SRSWebApi.Interfaces
 		ICollection<StudentCourseGetDTO> GetStudentCourses();
 		StudentCourseGetDTO GetStudentCourseById(int id);
 		ICollection<StudentCourseGetDTO> GetStudentCoursesByStudentId(int studentId);
-		StudentCourse CreateStudentCourse(StudentCourseCreateDTO studentCourseDTO);
+		bool CreateStudentCourses(StudentCourseCreateDTO studentCourseDTO);
 		bool UpdateStudentCourse(int id, StudentCourseUpdateDTO studentCourse);
 		bool DeleteStudentCourse(int id);
 		bool Save();
