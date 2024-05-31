@@ -19,14 +19,6 @@ namespace SRSWebApi.Repository
 
 		public bool CreateCourse(CourseDTO course)
 		{
-			if (!_context.Semesters.Any(s => s.SemesterId == course.SemesterId) ||
-				!_context.Professors.Any(p => p.ProfessorId == course.ProfessorId) ||
-				!_context.Departments.Any(d => d.DepartmentId == course.DepartmentId) ||
-				(course.PrerequisiteCourseId != null && !_context.Courses.Any(c => c.CourseId == course.PrerequisiteCourseId)))
-			{
-				throw new Exception("You are referencing the non-existing data");
-				return false;
-			}
 			Course courseToCreate = new Course
 			{
 				CourseCode = course.CourseCode,
@@ -45,6 +37,18 @@ namespace SRSWebApi.Repository
 			return Save();
 		}
 
+		public bool IsReferenceCorrect(CourseDTO course)
+		{
+			if (!_context.Semesters.Any(s => s.SemesterId == course.SemesterId) ||
+				!_context.Professors.Any(p => p.ProfessorId == course.ProfessorId) ||
+				!_context.Departments.Any(d => d.DepartmentId == course.DepartmentId) ||
+				(course.PrerequisiteCourseId != null && !_context.Courses.Any(c => c.CourseId == course.PrerequisiteCourseId)))
+			{
+				return false;
+			}
+
+			return true;
+		}
 		public bool DeleteCourse(int id)
 		{
 			var course = _context.Courses.Where(p => p.CourseId == id).FirstOrDefault();

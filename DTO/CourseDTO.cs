@@ -9,9 +9,9 @@ namespace SRSWebApi.DTO
 		public int? SemesterId { get; set; }
 
 		public int? ProfessorId { get; set; }
-        public string ProfessorName { get; set; } = null!;
+		public string ProfessorName { get; set; } = null!;
 
-        public string CourseCode { get; set; } = null!;
+		public string CourseCode { get; set; } = null!;
 
 		public string CourseName { get; set; } = null!;
 

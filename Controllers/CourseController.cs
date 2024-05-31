@@ -36,6 +36,10 @@ namespace SRSWebApi.Controllers
 		[ProducesResponseType(200)]
 		public IActionResult CreateCourse([FromBody] CourseDTO course)
 		{
+			if(!_courseRepository.IsReferenceCorrect(course))
+			{
+				return StatusCode(400, "You are refencing non existing data");
+			}
 			var result = _courseRepository.CreateCourse(course);
 			return Ok(result);
 		}
