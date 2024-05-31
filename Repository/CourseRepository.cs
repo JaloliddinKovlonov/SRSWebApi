@@ -17,7 +17,7 @@ namespace SRSWebApi.Repository
 			_context = context;
 		}
 
-		public bool CreateCourse(CourseDTO course)
+		public int CreateCourse(CourseDTO course)
 		{
 			Course courseToCreate = new Course
 			{
@@ -34,8 +34,13 @@ namespace SRSWebApi.Repository
 			};
 
 			_context.Courses.Add(courseToCreate);
-			return Save();
-		}
+            if (Save())
+            {
+                return courseToCreate.CourseId;
+            }
+
+            return 0;
+        }
 
 		public bool IsReferenceCorrect(CourseDTO course)
 		{
