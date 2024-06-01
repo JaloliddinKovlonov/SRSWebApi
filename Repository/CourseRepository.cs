@@ -66,15 +66,30 @@ namespace SRSWebApi.Repository
 			return _context.Courses.Where(p => p.CourseId == id).FirstOrDefault();
 		}
 
-		public ICollection<Course> GetCourses()
+		public ICollection<CourseDTO> GetCourses()
 		{
-			return _context.Courses.ToList();
-		}
+			return _context.Courses
+                .Include(c => c.Professor)
+                .Select(c => new CourseDTO
+                {
+                    AcademicYear = c.AcademicYear,
+                    SemesterId = c.SemesterId,
+                    ProfessorId = c.ProfessorId,
+                    CourseCode = c.CourseCode,
+                    CourseName = c.CourseName,
+                    CourseDescription = c.CourseDescription,
+                    CreditHours = c.CreditHours,
+                    DepartmentId = c.DepartmentId,
+                    PrerequisiteCourseId = c.PrerequisiteCourseId,
+                    ProfessorName = c.Professor != null ? $"{c.Professor.FirstName} {c.Professor.LastName}" : string.Empty
+                })
+                .ToList();
+        }
 
 		public ICollection<AvailableCourseDTO> GetAvailableCoursesForStudent(int studentId, int? departmentId, int? facultyId)
 		{
 			var takenCourses = _context.StudentCourses
-				.Where(sc => sc.StudentId == studentId && (sc.IsCompleted == 1 || sc.IsCompleted == 0))
+				.Where(sc => sc.Student.UserId == studentId && (sc.IsCompleted == 1 || sc.IsCompleted == 0))
 				.Select(sc => sc.CourseId)
 				.ToList();
 

@@ -34,11 +34,11 @@ namespace SRSWebApi.Controllers
 			return Ok(studentCourse);
 		}
 
-		[HttpGet("student/{studentId}")]
+		[HttpGet("student/{userId}")]
 		[ProducesResponseType(200)]
-		public IActionResult GetStudentCoursesByStudentId(int studentId)
+		public IActionResult GetStudentCoursesByStudentId(int userId)
 		{
-			var studentCourses = _studentCourseRepository.GetStudentCoursesByStudentId(studentId);
+			var studentCourses = _studentCourseRepository.GetStudentCoursesByStudentId(userId);
 			if (studentCourses == null || !studentCourses.Any()) return NotFound();
 			return Ok(studentCourses);
 		}

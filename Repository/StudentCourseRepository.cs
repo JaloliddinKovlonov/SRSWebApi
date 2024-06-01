@@ -42,8 +42,8 @@ namespace SRSWebApi.Repository
 			return _context.StudentCourses
 				.Include(sc => sc.Course)
 				.Include(sc => sc.Student)
-				.Include(sc => sc.Course.Professor) 
-				.Where(sc => sc.StudentId == studentId)
+				.Include(sc => sc.Course.Professor)
+				.Where(sc => sc.Student.UserId == studentId)
 				.Select(sc => new StudentCourseGetDTO
 				{
 					StudentCourseId = sc.StudentCourseId,

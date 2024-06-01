@@ -43,20 +43,20 @@ namespace SRSWebApi.Controllers
 			return Ok(schedule);
 		}
 
-		[HttpGet("StudentId/{studentId}")]
+		[HttpGet("StudentId/{userId}")]
 		[ProducesResponseType(200)]
-		public IActionResult GetScheduleByStudentId(int studentId)
+		public IActionResult GetScheduleByStudentId(int userId)
 		{
-			var schedule = _scheduleRepository.GetScheduleByStudentId(studentId);
+			var schedule = _scheduleRepository.GetScheduleByStudentId(userId);
 			if (schedule == null) return NotFound();
 			return Ok(schedule);
 		}
 
-		[HttpGet("ProfessorId/{professorId}")]
+		[HttpGet("ProfessorId/{userId}")]
 		[ProducesResponseType(200)]
-		public IActionResult GetScheduleByProfessorId(int professorId)
+		public IActionResult GetScheduleByProfessorId(int userId)
 		{
-			var schedule = _scheduleRepository.GetScheduleByProfessorId(professorId);
+			var schedule = _scheduleRepository.GetScheduleByProfessorId(userId);
 			if (schedule == null) return NotFound();
 			return Ok(schedule);
 		}

@@ -23,11 +23,11 @@ namespace SRSWebApi.Controllers
             return Ok(advisors);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{userId}")]
         [ProducesResponseType(200)]
-        public IActionResult GetAdvisorById(int id)
+        public IActionResult GetAdvisorById(int userId)
         {
-            var advisor = _advisorRepository.GetAdvisorById(id);
+            var advisor = _advisorRepository.GetAdvisorById(userId);
             if (advisor == null) return NotFound();
             return Ok(advisor);
         }

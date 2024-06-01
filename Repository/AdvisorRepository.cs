@@ -35,14 +35,15 @@ namespace SRSWebApi.Repository
             return _context.Advisors
                 .Include(a => a.Professor)
                 .Include(s => s.Students)
-                .FirstOrDefault(a => a.AdvisorId == id);
+                .FirstOrDefault(a => a.UserId == id);
         }
 
         public bool CreateAdvisor(AdvisorCreateDTO advisorDTO)
         {
             var advisor = new Advisor
             {
-                ProfessorId = advisorDTO.ProfessorId
+                ProfessorId = advisorDTO.ProfessorId,
+                UserId = advisorDTO.UserId
             };
 
             _context.Advisors.Add(advisor);

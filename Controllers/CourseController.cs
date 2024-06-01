@@ -63,11 +63,11 @@ namespace SRSWebApi.Controllers
 			return Ok(result);
 		}
 
-		[HttpGet("available/{studentId}")]
+		[HttpGet("available/{userId}")]
 		[ProducesResponseType(200)]
-		public IActionResult GetAvailableCoursesForStudent(int studentId, int? departmentId, int? facultyId)
+		public IActionResult GetAvailableCoursesForStudent(int userId, int? departmentId, int? facultyId)
 		{
-			var availableCourses = _courseRepository.GetAvailableCoursesForStudent(studentId, departmentId, facultyId);
+			var availableCourses = _courseRepository.GetAvailableCoursesForStudent(userId, departmentId, facultyId);
 			return Ok(availableCourses);
 		}
 	}

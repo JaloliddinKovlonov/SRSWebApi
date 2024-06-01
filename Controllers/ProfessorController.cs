@@ -38,12 +38,12 @@ using SRSWebApi.Models;
 			[ProducesResponseType(200)]
 			public IActionResult CreateProfessor([FromBody] ProfessorCreateDTO professor)
 			{
-				var professorId = _professorRepository.CreateProfessor(professor);
-            if (professorId == null)
+				var profess = _professorRepository.CreateProfessor(professor);
+            if (profess == null)
             {
                 return BadRequest("Failed to create professor.");
             }
-            return Ok(professorId);
+            return Ok(profess);
 			}
 
 			[ApiExplorerSettings(IgnoreApi = true)]

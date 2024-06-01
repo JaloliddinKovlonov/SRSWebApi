@@ -37,6 +37,9 @@ public partial class User
     public string Salt { get; set; } = null!;
 
     [InverseProperty("User")]
+    public virtual ICollection<Advisor> Advisors { get; set; } = new List<Advisor>();
+
+    [InverseProperty("User")]
     public virtual ICollection<Professor> Professors { get; set; } = new List<Professor>();
 
     [InverseProperty("User")]

@@ -50,7 +50,7 @@ namespace SRSWebApi.Repository
 		public ICollection<ScheduleGetDTO?> GetScheduleByStudentId(int studentId)
 		{
 			ICollection<StudentCourse> studentCourses = _context.StudentCourses
-				.Where(sc => sc.StudentId == studentId && sc.IsCompleted == 0)
+				.Where(sc => sc.Student.UserId == studentId && sc.IsCompleted == 0)
 				.ToList();
 
 			List<int> courseIds = studentCourses.Select(sc => sc.CourseId).ToList();
@@ -79,7 +79,7 @@ namespace SRSWebApi.Repository
 		public ICollection<ScheduleGetDTO?> GetScheduleByProfessorId(int professorId)
 		{
 			ICollection<Schedule> schedules = _context.Schedules
-				.Where(s => s.Course.ProfessorId == professorId)
+				.Where(s => s.Course.Professor.UserId == professorId)
 				.Include(s => s.Course)
 				.ThenInclude(c => c.Professor)
 				.ToList();

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using SRSWebApi.Data;
 using SRSWebApi.DTO;
 using SRSWebApi.Interfaces;
@@ -31,7 +32,7 @@ namespace SRSWebApi.Repository
 				.FirstOrDefault(p => p.ProfessorId == id);
 		}
 
-		public int CreateProfessor(ProfessorCreateDTO professorDTO)
+		public Professor CreateProfessor(ProfessorCreateDTO professorDTO)
 		{
 			var user = new User
 			{
@@ -58,10 +59,12 @@ namespace SRSWebApi.Repository
 			_context.Professors.Add(professor);
 			if (Save())
 			{
-				return professor.ProfessorId;
+				return professor;
 			}
-
-			return 0;
+			else
+			{
+                throw new Exception("Failed to create the professor.");
+            }
 		}
 
 		public bool UpdateProfessor(int id, ProfessorUpdateDTO professorDTO)

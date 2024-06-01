@@ -5,7 +5,7 @@ namespace SRSWebApi.Interfaces
 {
 	public interface ICourseRepository
 	{
-		ICollection<Course> GetCourses();
+		ICollection<CourseDTO> GetCourses();
 		Course GetCourseById(int id);
 		int CreateCourse(CourseDTO course);
 		bool DeleteCourse(int id);
