@@ -66,12 +66,13 @@ namespace SRSWebApi.Repository
 			return _context.Courses.Where(p => p.CourseId == id).FirstOrDefault();
 		}
 
-		public ICollection<CourseDTO> GetCourses()
+		public ICollection<ListCourse> GetCourses()
 		{
 			return _context.Courses
                 .Include(c => c.Professor)
-                .Select(c => new CourseDTO
+                .Select(c => new ListCourse
                 {
+                    CourseId = c.CourseId,
                     AcademicYear = c.AcademicYear,
                     SemesterId = c.SemesterId,
                     ProfessorId = c.ProfessorId,
@@ -128,13 +129,14 @@ namespace SRSWebApi.Repository
 			return availableCourses;
 		}
 
-        public ICollection<CourseDTO> GetCoursesByDepartmentId(int departmentId)
+        public ICollection<ListCourse> GetCoursesByDepartmentId(int departmentId)
         {
             var courses = _context.Courses
                 .Include(c => c.Professor)
                 .Where(c => c.DepartmentId == departmentId)
-                .Select(c => new CourseDTO
+                .Select(c => new ListCourse
                 {
+                    CourseId = c.CourseId,
                     AcademicYear = c.AcademicYear,
                     SemesterId = c.SemesterId,
                     ProfessorId = c.ProfessorId,
